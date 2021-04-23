@@ -1,22 +1,22 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import QuestionList from "./questionlist";
+import WriteCode from "./writecode";
 
-class StudentDash extends React.Component {
+class QuestionList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      Batches: [{name:"Problem Solving", id:1}, {name:"DSA", id:2}],
+      Questions: [{name:"Fibonacci", id:1}],
     };
   }
 
-  openBatch = () => {
-    ReactDOM.render(<QuestionList token={this.props.token}/>, document.getElementById("root"));
+  openQuestion = (token) => {
+    ReactDOM.render(<WriteCode token={token}/>, document.getElementById("root"));
     }
 
-  Batch = ({name}) => (
+  Question = ({name}) => (
     <div>
-        <button type="button" class="list-group-item list-group-item-action" onClick={this.openBatch}>{name}</button>
+        <button type="button" class="list-group-item list-group-item-action" onClick={this.openQuestion}>{name}</button>
     </div>
 );
 
@@ -47,13 +47,13 @@ class StudentDash extends React.Component {
     return (
         <div>
             <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
-            <h1 class="display-4 fw-normal">Student Dashboard</h1>
+            <h1 class="display-4 fw-normal">Dashboard</h1>
             </div>
             <div class="list-group">
-                {this.state.Batches.map((batch) => (
-                    <this.Batch
-                        name={batch.name}
-                        key={batch.id.value}
+                {this.state.Questions.map((question) => (
+                    <this.Question
+                        name={question.name}
+                        key={question.id.value}
                     />
                 ))}
             </div>
@@ -62,4 +62,4 @@ class StudentDash extends React.Component {
   }
 }
 
-export default StudentDash;
+export default QuestionList;

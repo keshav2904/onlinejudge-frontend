@@ -1,5 +1,6 @@
 import React from "react";
-// import ReactDOM from "react-dom";
+import ReactDOM from "react-dom";
+import AddBatch from "./addbatch";
 
 class TeacherDash extends React.Component {
   constructor(props) {
@@ -18,6 +19,10 @@ class TeacherDash extends React.Component {
     this.setState({
       [name]: value,
     });
+  }
+
+  handleBatch = () => {
+    ReactDOM.render(<AddBatch />, document.getElementById("root"));
   }
 
 //   handleSubmit = (event) => {
@@ -59,7 +64,7 @@ class TeacherDash extends React.Component {
                     <ul class="list-unstyled mt-3 mb-4">
                         <li>Create a new Batch</li>
                     </ul>
-                    <button type="button" class="w-100 btn btn-lg btn-outline-primary">Add Batch</button>
+                    <button type="button" class="w-100 btn btn-lg btn-outline-primary" onClick={this.handleBatch}>Add Batch</button>
                     </div>
                 </div>
                 </div>

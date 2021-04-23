@@ -1,17 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "../index.css";
-import Output from "./output";
-import Question from "./question";
+import TeacherDash from "./teacherdash";
 
-const nl2br = require('react-nl2br');
-
-class WriteCode extends React.Component {
+class AddBatch extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        lang: "",
-        code: "",
+        name: "",
+        studentslist: "",
       };
     }
   
@@ -25,7 +22,7 @@ class WriteCode extends React.Component {
     }
   
     handleSubmit = (event) => {
-      fetch("http://localhost:5050/compile", {
+      fetch("http://localhost:8080/addbatch", {
         method: "POST",
         headers: {'Content-Type': 'application/json'}, 
         body: JSON.stringify(this.state),
@@ -33,7 +30,7 @@ class WriteCode extends React.Component {
         return response.json();
       }).then(function(json) {
   
-        ReactDOM.render(Output(nl2br(json.output)), document.getElementById("output-div"));
+        ReactDOM.render(TeacherDash, document.getElementById("root"));
       });
   
       event.preventDefault();
@@ -42,45 +39,37 @@ class WriteCode extends React.Component {
     render() {
       return (
         <div>
-        <div id="question-div">
-            {Question()}
-        </div>
+        <h3>Add a new Batch</h3>
         <form onSubmit ={this.handleSubmit}>
-          <label for="lang-select"><b>Choose a language:</b></label>
+          <label for="name"><b>Enter the Subject:</b></label>
           <br />
-          <select
-            name="lang"
-            required
-            value={this.state.lang}
-            onChange={this.handleChange.bind(this)}
-          >
-            <option value="">--Please choose a language--</option>
-            <option value="c">C</option>
-            <option value="cpp">C++</option>
-            <option value="py">Python</option>
-          </select>
+          <input
+          className="width-100"
+          name="name"
+          value={this.state.name}
+          onChange={this.handleChange.bind(this)}
+          placeholder="Enter Subject Name">
+          </input>
           <br />
-          <label for="code"><b>CODE here : </b></label>
+          <label for="studentslist"><b>Students mails here : </b></label>
           <br />
           <textarea
             class="width-100"
-            name="code"
+            name="studentslist"
             cols="40"
             rows="20"
             id="codebox"
-            value={this.state.code}
+            value={this.state.studentslist}
             onChange={this.handleChange.bind(this)}
-            placeholder="Write code here..."
+            placeholder="Students mail list goes here..."
           />
           <br />
           <input type="submit" value="Submit" />
           <br />
         </form>
-        <div id="output-div">
-        </div>
         </div>
       );
     }
   }
 
-export default WriteCode;
+export default AddBatch;
