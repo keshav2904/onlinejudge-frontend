@@ -3,12 +3,14 @@ import ReactDOM from "react-dom";
 import "../index.css";
 import TeacherDash from "./teacherdash";
 
-class AddBatch extends React.Component {
+class AddQuestion extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
         name: "",
-        studentslist: "",
+        question: "",
+        inputtestcase: "",
+        outputtestcase: "",
       };
     }
   
@@ -44,30 +46,57 @@ class AddBatch extends React.Component {
     render() {
       return (
         <div>
-        <h3>Add a new Batch</h3>
+        <h3>Add a new Question</h3>
         <form onSubmit = {this.handleSubmit}>
-          <label for="name"><b>Enter the Subject:</b></label>
+          <label for="name"><b>Enter Question Name:</b></label>
           <br />
           <input
           className="width-100"
           name="name"
           value={this.state.name}
           onChange={this.handleChange.bind(this)}
-          placeholder="Enter Subject Name">
+          placeholder="Enter Question Name">
           </input>
           <br />
-          <label for="studentslist"><b>Students mails here : </b></label>
+          <label for="question"><b>Question : </b></label>
           <br />
           <textarea
             class="width-100"
-            name="studentslist"
+            name="question"
             cols="40"
-            rows="20"
+            rows="10"
             id="codebox"
             value={this.state.studentslist}
             onChange={this.handleChange.bind(this)}
-            placeholder="Students mail list goes here..."
+            placeholder="Question goes here..."
           />
+          <br />
+          <label for="testcase"><b>Testcases : </b></label>
+          <br />
+          <div className="row">
+              <div className="col">
+          <textarea
+            class="width-100"
+            name="inputtestcase"
+            cols="20"
+            rows="10"
+            id="codebox"
+            value={this.state.studentslist}
+            onChange={this.handleChange.bind(this)}
+            placeholder="Input test case goes here..."
+          /></div>
+          <div className="col">
+          <textarea
+            class="width-100"
+            name="outputtestcase"
+            cols="20"
+            rows="10"
+            id="codebox"
+            value={this.state.studentslist}
+            onChange={this.handleChange.bind(this)}
+            placeholder="Output test case goes here..."
+          /></div>
+          </div>
           <br />
           <input type="submit" value="Submit" />
           <br />
@@ -77,4 +106,4 @@ class AddBatch extends React.Component {
     }
   }
 
-export default AddBatch;
+export default AddQuestion;

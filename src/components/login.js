@@ -34,6 +34,9 @@ class Login extends React.Component {
         return response.json();
       })
       .then(function (json) {
+        if (Object.keys(json).length === 0) {
+          ReactDOM.render("Error Login", document.getElementById("root"));
+        }
         if (accounttype === "student"){
           ReactDOM.render(<StudentDash token={json.token}/>, document.getElementById("root"));
         }

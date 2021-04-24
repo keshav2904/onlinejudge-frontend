@@ -6,6 +6,7 @@ class Register extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      name: "",
       email: "",
       password: "",
       accounttype: "",
@@ -28,10 +29,16 @@ class Register extends React.Component {
       body: JSON.stringify(this.state),
     })
       .then(function (response) {
-        return response.json();
+        if(response.ok) {return response.json();}
+        else if(response.status === 400) {console.log(response.body); return {};}
       })
       .then(function (json) {
+        if (Object.keys(json).length === 0) {
+          ReactDOM.render("Error Register", document.getElementById("root"));
+        }
+        else{
         ReactDOM.render(<Login />, document.getElementById("root"));
+        }
       });
 
     event.preventDefault();
@@ -49,12 +56,21 @@ class Register extends React.Component {
           ></img>
           <h1 className="h3 mb-4 font-weight-normal">REGISTER</h1>
           <input
-            type="email"
-            name="email"
+            type="text"
+            name="name"
             className="form-control"
-            placeholder="Email"
+            placeholder="Name"
             required
             autoFocus
+            value={this.state.name}
+            onChange={this.handleChange.bind(this)}
+          />
+          <input
+            type="email"
+            name="email"
+            className="form-control mt-3"
+            placeholder="Email"
+            required
             value={this.state.email}
             onChange={this.handleChange.bind(this)}
           />

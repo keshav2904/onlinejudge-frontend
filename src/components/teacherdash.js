@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import AddBatch from "./addbatch";
+import AddQuestion from "./addquestion";
+import ViewBatch from "./viewbatch";
 
 class TeacherDash extends React.Component {
   constructor(props) {
@@ -22,31 +24,29 @@ class TeacherDash extends React.Component {
   }
 
   handleBatch = () => {
-    ReactDOM.render(<AddBatch />, document.getElementById("root"));
+    ReactDOM.render(<AddBatch token={this.props.token}/>, document.getElementById("root"));
   }
 
-//   handleSubmit = (event) => {
-//     var accounttype = this.state.accounttype;
-//     fetch("http://localhost:8080/login", {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify(this.state),
-//     })
-//       .then(function (response) {
-//         return response.json();
-//       })
-//       .then(function (json) {
-//         var token = json.token;
-//         if (accounttype === "student"){
-//           ReactDOM.render(<StudentDash token={{ token }}/>, document.getElementById("root"));
-//         }
-//         else{
-//           ReactDOM.render(<TeacherDash token={{ token }}/>, document.getElementById("root"));
-//         }
-//       });
+  handleQuestion = () => {
+    ReactDOM.render(<AddQuestion token={this.props.token} />, document.getElementById("root"));
+  }
 
-//     event.preventDefault();
-//   };
+  handleViewBatch = () => {
+    // ReactDOM.render(<ViewBatch token={this.props.token} Batches={[{name:"Problem Solving", id:1}, {name:"DSA", id:2}, {name:"OSSD", id:3}]}/>, document.getElementById("root"));
+    fetch("http://localhost:8080/getbatch", {
+        method: "GET",
+        mode: "no-cors",
+        headers: {'Token': ''+this.props.token},
+      }).then(function (response) {
+        if(response.ok) {return response.json();}
+        else {console.log(response.text()); return 0;}
+      }).then(function(json) {
+        if (Object.keys(json).length === 0) {
+          ReactDOM.render("No Batches Found", document.getElementById("root"));
+        }
+        ReactDOM.render(<ViewBatch token={this.props.token} Batches={json}/>, document.getElementById("root"));
+      });
+  }
 
   render() {
     return (
@@ -77,20 +77,20 @@ class TeacherDash extends React.Component {
                     <ul class="list-unstyled mt-3 mb-4">
                         <li>Create a new Question</li>
                     </ul>
-                    <button type="button" class="w-100 btn btn-lg btn-outline-primary">Add Question</button>
+                    <button type="button" class="w-100 btn btn-lg btn-outline-primary" onClick={this.handleQuestion}>Add Question</button>
                     </div>
                 </div>
                 </div>
                 <div class="col">
                 <div class="card mb-4 rounded-3 shadow-sm ">
                     <div class="card-header py-3 ">
-                    <h4 class="my-0 fw-normal">View Assignments</h4>
+                    <h4 class="my-0 fw-normal">View Batches</h4>
                     </div>
                     <div class="card-body">
                     <ul class="list-unstyled mt-3 mb-4">
-                        <li>View your Assignments</li>
+                        <li>View your Batches</li>
                     </ul>
-                    <button type="button" class="w-100 btn btn-lg btn-outline-primary">Click here</button>
+                    <button type="button" class="w-100 btn btn-lg btn-outline-primary" onClick={this.handleViewBatch}>Click here</button>
                     </div>
                 </div>
                 </div>

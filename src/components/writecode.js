@@ -43,7 +43,7 @@ class WriteCode extends React.Component {
       return (
         <div>
         <div id="question-div">
-            {Question()}
+            {Question(this.props.id, this.props.token)}
         </div>
         <form onSubmit ={this.handleSubmit}>
           <label for="lang-select"><b>Choose a language:</b></label>

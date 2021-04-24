@@ -1,6 +1,10 @@
 import React from "react"
 
-function Question() {
+// function fetchQuestion() {
+
+// }
+
+function Question(id, token) {
     return (
       <div>
         <h3>QUESTION</h3>

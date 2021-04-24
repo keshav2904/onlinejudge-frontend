@@ -6,6 +6,7 @@ h3 {
     padding-top: 50px;
 }
 textarea {
+    font-family: 'Courier New', Courier, monospace;
     overflow-y: scroll;
     resize: vertical;
 }
