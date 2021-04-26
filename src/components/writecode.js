@@ -32,7 +32,7 @@ class WriteCode extends React.Component {
       }).then(function (response) {
         return response.json();
       }).then(function(json) {
-  
+        console.log(json.output);
         ReactDOM.render(Output(nl2br(json.output)), document.getElementById("output-div"));
       });
   

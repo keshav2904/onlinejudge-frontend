@@ -8,7 +8,7 @@ class AddBatch extends React.Component {
       super(props);
       this.state = {
         name: "",
-        studentslist: "",
+        students: "",
       };
     }
   
@@ -22,22 +22,19 @@ class AddBatch extends React.Component {
     }
   
     handleSubmit = (event) => {
+      const token = this.props.token;
       var batch = {
         name: this.state.name,
-        studentslist: this.state.studentslist.split(" "),
+        students: this.state.students.split(" "),
       }
-      console.log(batch);
       fetch("http://localhost:8080/addbatch", {
         method: "POST",
-        headers: {'Content-Type': 'application/json', 'Token': "'"+this.props.token+"'"}, 
+        headers: new Headers({'Content-Type': 'application/json', 'Token': token}), 
         body: JSON.stringify(batch),
       }).then(function (response) {
-        return response.json();
-      }).then(function(json) {
-        
-        ReactDOM.render(TeacherDash, document.getElementById("root"));
+        if (response.ok) {ReactDOM.render(<TeacherDash token={token}/>, document.getElementById("root"));}
+        else {ReactDOM.render("Error creating batch", document.getElementById("root"));}
       });
-  
       event.preventDefault();
     };
 
@@ -56,11 +53,11 @@ class AddBatch extends React.Component {
           placeholder="Enter Subject Name">
           </input>
           <br />
-          <label for="studentslist"><b>Students mails here : </b></label>
+          <label for="students"><b>Students mails here : </b></label>
           <br />
           <textarea
             class="width-100"
-            name="studentslist"
+            name="students"
             cols="40"
             rows="20"
             id="codebox"

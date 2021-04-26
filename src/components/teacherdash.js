@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import AddBatch from "./addbatch";
-import AddQuestion from "./addquestion";
+import SelectBatch from "./selectbatch";
 import ViewBatch from "./viewbatch";
 
 class TeacherDash extends React.Component {
@@ -24,11 +24,32 @@ class TeacherDash extends React.Component {
   }
 
   handleBatch = () => {
+    console.log(this.props.token);
     ReactDOM.render(<AddBatch token={this.props.token}/>, document.getElementById("root"));
   }
 
   handleQuestion = () => {
-    ReactDOM.render(<AddQuestion token={this.props.token} />, document.getElementById("root"));
+    const token = this.props.token;
+    // ReactDOM.render(<ViewBatch token={this.props.token} Batches={[{name:"Problem Solving", id:1}, {name:"DSA", id:2}, {name:"OSSD", id:3}]}/>, document.getElementById("root"));
+    fetch("http://localhost:8080/getbatch", {
+        method: "GET",
+        headers: new Headers({'Token': token})
+      }).then(function (response) {
+        if (response.ok) {return response.json();}
+        else if (response.status === 401) {return "token is expired! please Re-login";}        
+      }).then(function(json) {
+        if (typeof json === "string") {
+          ReactDOM.render(json, document.getElementById("root"));  
+        }
+        else if(json === null){
+          ReactDOM.render("No batches Found", document.getElementById("root"));
+        }
+        else {
+        ReactDOM.render(<SelectBatch token={token} Batches={json}/>, document.getElementById("root"));
+      }
+      }).catch((error) => {
+        console.log(error);
+      });
   }
 
   handleViewBatch = () => {
