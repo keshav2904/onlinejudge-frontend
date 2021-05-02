@@ -1,12 +1,12 @@
 import React from "react";
 
-function Output(output) {
+function ExpOutput(output) {
     return (
       <div class="output-left">
-        <h3>YOUR OUTPUT</h3>
+        <h3>EXPECTED OUTPUT</h3>
         {output}
       </div>
     );
   }
 
-export default Output;
+export default ExpOutput;

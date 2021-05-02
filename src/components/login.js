@@ -1,8 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import Register from "./register";
-import StudentDash from "./studentdash";
+// import StudentDash from "./studentdash";
 import TeacherDash from "./teacherdash";
+import SelectBatch from "./selectbatch";
 
 class Login extends React.Component {
   constructor(props) {
@@ -23,6 +24,28 @@ class Login extends React.Component {
     });
   }
 
+  // fetchBatch = (token) => {
+  //   fetch("http://localhost:8080/getbatch", {
+  //       method: "GET",
+  //       headers: new Headers({'Token': token})
+  //     }).then(function (response) {
+  //       if (response.ok) {return response.json();}
+  //       else if (response.status === 401) {return "token is expired! please Re-login";}
+  //     }).then(function(json) {
+  //       if (typeof json === "string") {
+  //         ReactDOM.render(json, document.getElementById("root"));
+  //       }
+  //       else if(json === null){
+  //         ReactDOM.render("No batches Found", document.getElementById("root"));
+  //       }
+  //       else {
+  //       ReactDOM.render(<SelectBatch token={token} Batches={json} query={3}/>, document.getElementById("root"));
+  //     }
+  //     }).catch((error) => {
+  //       console.log(error);
+  //     });
+  // }
+
   handleSubmit = (event) => {
     var accounttype = this.state.accounttype;
     fetch("http://localhost:8080/login", {
@@ -37,11 +60,47 @@ class Login extends React.Component {
         if (Object.keys(json).length === 0) {
           ReactDOM.render("Error Login", document.getElementById("root"));
         }
-        if (accounttype === "student"){
-          ReactDOM.render(<StudentDash token={json.token}/>, document.getElementById("root"));
-        }
-        else{
-          ReactDOM.render(<TeacherDash token={json.token}/>, document.getElementById("root"));
+        console.log(json.token);
+
+
+
+        if (accounttype === "student") {
+          const token = json.token;
+          fetch("http://localhost:8080/getbatch", {
+            method: "GET",
+            headers: new Headers({ Token: json.token }),
+          })
+            .then(function (response) {
+              if (response.ok) {
+                return response.json();
+              } else if (response.status === 401) {
+                return "token is expired! please Re-login";
+              }
+            })
+            .then(function (json) {
+              if (typeof json === "string") {
+                ReactDOM.render(json, document.getElementById("root"));
+              } else if (json === null) {
+                ReactDOM.render(
+                  "No batches Found",
+                  document.getElementById("root")
+                );
+              } else {
+                console.log(json);
+                ReactDOM.render(
+                  <SelectBatch token={token} Batches={json} query={3} />,
+                  document.getElementById("root")
+                );
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } else {
+          ReactDOM.render(
+            <TeacherDash token={json.token} />,
+            document.getElementById("root")
+          );
         }
       });
 
@@ -49,13 +108,16 @@ class Login extends React.Component {
   };
 
   handleRegister = () => {
-      ReactDOM.render(<Register />, document.getElementById("root"));
-  }
+    ReactDOM.render(<Register />, document.getElementById("root"));
+  };
 
   render() {
     return (
       <div className="text-center mt-5">
-        <form style={{ "maxWidth": "50%", margin: "auto" }} onSubmit={this.handleSubmit}>
+        <form
+          style={{ maxWidth: "50%", margin: "auto" }}
+          onSubmit={this.handleSubmit}
+        >
           <img
             className="mt-5 mb-5"
             src="jiit_logo.png"
@@ -93,11 +155,18 @@ class Login extends React.Component {
             <option value="student">Student</option>
           </select>
           <div className="mt-4 mb-5">
-            <button className="btn btn-lg btn-primary" type="submit">Login</button>
+            <button className="btn btn-lg btn-primary" type="submit">
+              Login
+            </button>
           </div>
         </form>
         <label className="mr-5">Don't have an Account ?</label>
-        <button className="border-0 btn-outline-dark" onClick={this.handleRegister}>Register</button>
+        <button
+          className="border-0 btn-outline-dark"
+          onClick={this.handleRegister}
+        >
+          Register
+        </button>
       </div>
     );
   }

@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import Login from "./components/login";
+// import WriteCode from "./components/writecode";
 // import Register from "./components/register";
 // import StudentDash from "./components/studentdash";
 // import TeacherDash from "./components/teacherdash";

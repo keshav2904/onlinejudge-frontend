@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import AddBatch from "./addbatch";
 import SelectBatch from "./selectbatch";
-import ViewBatch from "./viewbatch";
 
 class TeacherDash extends React.Component {
   constructor(props) {
@@ -30,6 +29,7 @@ class TeacherDash extends React.Component {
 
   handleQuestion = () => {
     const token = this.props.token;
+    console.log(token);
     // ReactDOM.render(<ViewBatch token={this.props.token} Batches={[{name:"Problem Solving", id:1}, {name:"DSA", id:2}, {name:"OSSD", id:3}]}/>, document.getElementById("root"));
     fetch("http://localhost:8080/getbatch", {
         method: "GET",
@@ -45,7 +45,7 @@ class TeacherDash extends React.Component {
           ReactDOM.render("No batches Found", document.getElementById("root"));
         }
         else {
-        ReactDOM.render(<SelectBatch token={token} Batches={json}/>, document.getElementById("root"));
+        ReactDOM.render(<SelectBatch token={token} Batches={json} query={1}/>, document.getElementById("root"));
       }
       }).catch((error) => {
         console.log(error);
@@ -69,7 +69,7 @@ class TeacherDash extends React.Component {
           ReactDOM.render("No batches Found", document.getElementById("root"));
         }
         else {
-        ReactDOM.render(<ViewBatch token={token} Batches={json}/>, document.getElementById("root"));
+        ReactDOM.render(<SelectBatch token={token} Batches={json} query={2}/>, document.getElementById("root"));
       }
       }).catch((error) => {
         console.log(error);

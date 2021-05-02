@@ -9,8 +9,10 @@ class AddQuestion extends React.Component {
       this.state = {
         name: "",
         question: "",
-        inputtestcase: "",
-        outputtestcase: "",
+        testcases: {
+          input: "",
+          output: ""
+        }
       };
     }
   
@@ -22,30 +24,51 @@ class AddQuestion extends React.Component {
         [name]: value
       });
     }
+    handleChange2(event) {
+      const target = event.target;
+      const value = target.value;
+      const name = target.name;
+      this.setState(prevState => ({
+        testcases: {...prevState.testcases, [name]: value}
+      }));
+    }
   
     handleSubmit = (event) => {
-      var batch = {
+      const token = this.props.token;
+      var assignment = {
         name: this.state.name,
-        studentslist: this.state.studentslist.split(" "),
+        question: this.state.question,
+        testcases: [{
+          input: this.state.testcases.input,
+          output: this.state.testcases.output
+        }]
       }
-      console.log(batch);
-      fetch("http://localhost:8080/addbatch", {
+      console.log(assignment);
+      fetch("http://localhost:8080/addassignment/"+this.props.id, {
         method: "POST",
-        headers: {'Content-Type': 'application/json', 'Token': "'"+this.props.token+"'"}, 
-        body: JSON.stringify(batch),
+        headers: new Headers({'Content-Type': 'application/json', 'Token': this.props.token}), 
+        body: JSON.stringify(assignment),
       }).then(function (response) {
-        return response.json();
-      }).then(function(json) {
-        
-        ReactDOM.render(TeacherDash, document.getElementById("root"));
+        if (response.ok) {ReactDOM.render(<TeacherDash token={token}/>, document.getElementById("root"));}
+        else {ReactDOM.render("error adding question", document.getElementById("root"));}
       });
   
       event.preventDefault();
     };
 
+    handleBack = () => {
+      ReactDOM.render(
+        <TeacherDash token={this.props.token} />,
+        document.getElementById("root")
+      );
+    }
+    
     render() {
       return (
         <div>
+          <div id="back">
+        <button onClick={this.handleBack}>go back</button>
+        </div>
         <h3>Add a new Question</h3>
         <form onSubmit = {this.handleSubmit}>
           <label for="name"><b>Enter Question Name:</b></label>
@@ -77,23 +100,23 @@ class AddQuestion extends React.Component {
               <div className="col">
           <textarea
             class="width-100"
-            name="inputtestcase"
+            name="input"
             cols="20"
             rows="10"
             id="codebox"
             value={this.state.studentslist}
-            onChange={this.handleChange.bind(this)}
+            onChange={this.handleChange2.bind(this)}
             placeholder="Input test case goes here..."
           /></div>
           <div className="col">
           <textarea
             class="width-100"
-            name="outputtestcase"
+            name="output"
             cols="20"
             rows="10"
             id="codebox"
             value={this.state.studentslist}
-            onChange={this.handleChange.bind(this)}
+            onChange={this.handleChange2.bind(this)}
             placeholder="Output test case goes here..."
           /></div>
           </div>

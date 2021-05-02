@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "../index.css";
 import Output from "./output";
+import SelectBatch from "./selectbatch";
 import Question from "./question";
 
 const nl2br = require('react-nl2br');
@@ -25,25 +26,67 @@ class WriteCode extends React.Component {
     }
   
     handleSubmit = (event) => {
-      fetch("http://localhost:5050/compile", {
+      const token = this.props.token;
+      console.log(token);
+      console.log(JSON.stringify(this.state));
+      fetch("http://localhost:8080/submit/"+this.props.id, {
         method: "POST",
-        headers: {'Content-Type': 'application/json'}, 
+        headers: new Headers({'Content-Type': 'application/json', "Token": token}), 
         body: JSON.stringify(this.state),
       }).then(function (response) {
         return response.json();
       }).then(function(json) {
         console.log(json.output);
-        ReactDOM.render(Output(nl2br(json.output)), document.getElementById("output-div"));
+        ReactDOM.render(Output(nl2br(json.result[0].output)), document.getElementById("output-div"));
+        if (json.result[0].result){ReactDOM.render("RESULT : Pass", document.getElementById("result"));}
+        else {ReactDOM.render("RESULT : Fail", document.getElementById("result"));}
       });
   
       event.preventDefault();
     };
 
+    handleBack = () => {
+      const token = this.props.token;
+          fetch("http://localhost:8080/getbatch", {
+            method: "GET",
+            headers: new Headers({ Token: token }),
+          })
+            .then(function (response) {
+              if (response.ok) {
+                return response.json();
+              } else if (response.status === 401) {
+                return "token is expired! please Re-login";
+              }
+            })
+            .then(function (json) {
+              if (typeof json === "string") {
+                ReactDOM.render(json, document.getElementById("root"));
+              } else if (json === null) {
+                ReactDOM.render(
+                  "No batches Found",
+                  document.getElementById("root")
+                );
+              } else {
+                console.log(json);
+                ReactDOM.render(
+                  <SelectBatch token={token} Batches={json} query={3} />,
+                  document.getElementById("root")
+                );
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+    }
+
     render() {
       return (
         <div>
+          <div id="back">
+        <button onClick={this.handleBack}>go back</button>
+        </div>
         <div id="question-div">
-            {Question(this.props.id, this.props.token)}
+            {Question(this.props.question)}
         </div>
         <form onSubmit ={this.handleSubmit}>
           <label for="lang-select"><b>Choose a language:</b></label>
@@ -76,8 +119,13 @@ class WriteCode extends React.Component {
           <input type="submit" value="Submit" />
           <br />
         </form>
-        <div id="output-div">
+        <div className="row">
+        <div id="output-div" className="col">
         </div>
+        <div id="exp-out" className="col">
+        </div>
+        </div>
+        <p id="result"></p>
         </div>
       );
     }

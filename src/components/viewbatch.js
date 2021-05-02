@@ -17,7 +17,7 @@ class ViewBatch extends React.Component {
     ReactDOM.render(<WriteCode token={this.props.token} id={id}/>, document.getElementById("root"));
     }
 
-  Batch = ({name}, {id}) => (
+  Batch = ({name, id}) => (
     <div>
         <button type="button" class="list-group-item list-group-item-action mb-3" onClick={() => {this.openQuestion(id)}}>{name}</button>
     </div>
@@ -33,6 +33,7 @@ class ViewBatch extends React.Component {
                 {this.props.Batches.map((batch) => (
                     <this.Batch
                         name={batch.name}
+                        id={batch.id}
                         key={batch.id}
                     />
                 ))}

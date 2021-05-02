@@ -15,31 +15,66 @@ class QuestionList extends React.Component {
   // }
 
   openQuestion = (id) => {
-    ReactDOM.render(<WriteCode token={this.props.token} id={id}/>, document.getElementById("root"));
+    const token = this.props.token
+    fetch("http://localhost:8080/getassignment/"+id, {
+            method: "GET",
+            headers: new Headers({ Token: token }),
+          })
+            .then(function (response) {
+              if (response.ok) {
+                return response.json();
+              } else if (response.status === 401) {
+                return "token is expired! please Re-login";
+              }
+            })
+            .then(function (json) {
+              if (typeof json === "string") {
+                ReactDOM.render(json, document.getElementById("root"));
+              } else {
+                console.log(json);
+                ReactDOM.render(
+                  <WriteCode token={token} id={id} question={json}/>,
+                  document.getElementById("root")
+                );
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
     }
 
-  Question = ({name}, {id}) => (
+  Question = ({id}) => (
     <div>
-        <button type="button" class="list-group-item list-group-item-action mb-3" onClick={() => {this.openQuestion(id)}}>{name}</button>
+        <button type="button" class="list-group-item list-group-item-action mb-3" onClick={() => {this.openQuestion(id)}}>{id}</button>
     </div>
 );
 
   render() {
+    if (this.props.Questions)
+    {
     return (
         <div>
             <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
             <h1 class="display-4 fw-normal">{this.props.subject}</h1>
             </div>
             <div class="list-group">
-                {this.state.Questions.map((question) => (
+                {this.props.Questions.map((question) => (
                     <this.Question
-                        name={question.name}
-                        key={question.id}
+                        id={question}
+                        key={question}
                     />
                 ))}
             </div>
         </div>
     );
+    }
+    else {
+      return (
+        <div>
+          No Questions Found
+        </div>
+      )
+    }
   }
 }
 

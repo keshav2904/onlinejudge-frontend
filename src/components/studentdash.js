@@ -6,25 +6,23 @@ class StudentDash extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      Batches: [{name:"Problem Solving", id:1}, {name:"DSA", id:2}, {name:"OSSD", id:3}],
+      Batches: [],
     };
   }
+  
 
-  // fetchBatches = () => {
-
-  // }
-
-  openBatch = (subj) => {
-    ReactDOM.render(<QuestionList token={this.props.token} subject={subj}/>, document.getElementById("root"));
+  openBatch = (subid) => {
+    ReactDOM.render(<QuestionList token={this.props.token} id={subid}/>, document.getElementById("root"));
     }
 
-  Batch = ({name}) => (
+  Batch = ({name, id}) => (
     <div>
-        <button type="button" className="list-group-item list-group-item-action mb-3" onClick={() => {this.openBatch(name)}}>{name}</button>
+        <button type="button" className="list-group-item list-group-item-action mb-3" onClick={() => {this.openBatch(id)}}>{name}</button>
     </div>
 );
 
   render() {
+    this.fetchBatches();
     return (
         <div>
             <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
@@ -34,6 +32,7 @@ class StudentDash extends React.Component {
                 {this.state.Batches.map((batch) => (
                     <this.Batch
                         name={batch.name}
+                        id={batch.id}
                         key={batch.id.value}
                     />
                 ))}

@@ -38,9 +38,19 @@ class AddBatch extends React.Component {
       event.preventDefault();
     };
 
+    handleBack = () => {
+      ReactDOM.render(
+        <TeacherDash token={this.props.token} />,
+        document.getElementById("root")
+      );
+    }
+
     render() {
       return (
         <div>
+        <div id="back">
+        <button onClick={this.handleBack}>go back</button>
+        </div>
         <h3>Add a new Batch</h3>
         <form onSubmit = {this.handleSubmit}>
           <label for="name"><b>Enter the Subject:</b></label>

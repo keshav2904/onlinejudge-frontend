@@ -29,14 +29,14 @@ class Register extends React.Component {
       body: JSON.stringify(this.state),
     })
       .then(function (response) {
-        if(response.ok) {return response.json();}
+        if(response.ok) {return {status: "success"};}
         else if(response.status === 400) {console.log(response.body); return {};}
       })
       .then(function (json) {
         if (Object.keys(json).length === 0) {
           ReactDOM.render("Error Register", document.getElementById("root"));
         }
-        else{
+        else {
         ReactDOM.render(<Login />, document.getElementById("root"));
         }
       });
