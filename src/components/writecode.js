@@ -36,7 +36,7 @@ class WriteCode extends React.Component {
       }).then(function (response) {
         return response.json();
       }).then(function(json) {
-        console.log(json.output);
+        console.log(json.result[0].output);
         ReactDOM.render(Output(nl2br(json.result[0].output)), document.getElementById("output-div"));
         if (json.result[0].result){ReactDOM.render("RESULT : Pass", document.getElementById("result"));}
         else {ReactDOM.render("RESULT : Fail", document.getElementById("result"));}

@@ -1,6 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import WriteCode from "./writecode";
+import TeacherDash from "./teacherdash";
+import SelectBatch from "./selectbatch";
+import ViewSubmissions from "./viewsubmissions";
 
 class QuestionList extends React.Component {
   constructor(props) {
@@ -16,6 +19,31 @@ class QuestionList extends React.Component {
 
   openQuestion = (id) => {
     const token = this.props.token
+    if (this.props.query === 2) {
+      fetch("http://localhost:8080/getsubmissions/"+id, {
+            method: "GET",
+            headers: new Headers({ Token: token }),
+          })
+            .then(function (response) {
+              if (response.ok) {
+                return response.json();
+              } else if (response.status === 401) {
+                return "token is expired! please Re-login";
+              }
+            })
+            .then(function (json) {
+              if (typeof json === "string") {
+                ReactDOM.render(json, document.getElementById("root"));
+              } else {
+                console.log(json);
+                ReactDOM.render(<ViewSubmissions token={token} submissions={json} />, document.getElementById("root"));
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+    } else {
+    
     fetch("http://localhost:8080/getassignment/"+id, {
             method: "GET",
             headers: new Headers({ Token: token }),
@@ -41,13 +69,54 @@ class QuestionList extends React.Component {
             .catch((error) => {
               console.log(error);
             });
-    }
+    }}
 
   Question = ({id}) => (
     <div>
-        <button type="button" class="list-group-item list-group-item-action mb-3" onClick={() => {this.openQuestion(id)}}>{id}</button>
+        <button type="button" class="list-group-item list-group-item-action mb-3" onClick={() => {this.openQuestion(id)}}>Assignment : {id}</button>
     </div>
 );
+
+handleBack = (query) => {
+  const token = this.props.token;
+  if (query === 2){
+  ReactDOM.render(
+    <TeacherDash token={token} />,
+    document.getElementById("root")
+  );
+  } else {
+          fetch("http://localhost:8080/getbatch", {
+            method: "GET",
+            headers: new Headers({ Token: token }),
+          })
+            .then(function (response) {
+              if (response.ok) {
+                return response.json();
+              } else if (response.status === 401) {
+                return "token is expired! please Re-login";
+              }
+            })
+            .then(function (json) {
+              if (typeof json === "string") {
+                ReactDOM.render(json, document.getElementById("root"));
+              } else if (json === null) {
+                ReactDOM.render(
+                  "No batches Found",
+                  document.getElementById("root")
+                );
+              } else {
+                console.log(json);
+                ReactDOM.render(
+                  <SelectBatch token={token} Batches={json} query={3} />,
+                  document.getElementById("root")
+                );
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+  }
+}
 
   render() {
     if (this.props.Questions)
@@ -71,6 +140,9 @@ class QuestionList extends React.Component {
     else {
       return (
         <div>
+          <div id="back">
+        <button onClick={this.handleBack(this.props.query)}>go back</button>
+        </div>
           No Questions Found
         </div>
       )

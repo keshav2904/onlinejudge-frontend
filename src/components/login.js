@@ -54,7 +54,8 @@ class Login extends React.Component {
       body: JSON.stringify(this.state),
     })
       .then(function (response) {
-        return response.json();
+        if (response.ok){return response.json();}
+        else {return {}}
       })
       .then(function (json) {
         if (Object.keys(json).length === 0) {

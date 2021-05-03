@@ -20,10 +20,10 @@ class SelectBatch extends React.Component {
         ReactDOM.render(<AddQuestion token={this.props.token} id={id}/>, document.getElementById("root"));
       }
       else if (this.props.query === 2){
-        ReactDOM.render(<QuestionList token={this.props.token} Questions={questions} />, document.getElementById("root"));
+        ReactDOM.render(<QuestionList token={this.props.token} Questions={questions} query={2} batchID={id} subject={name}/>, document.getElementById("root"));
     } else {
       console.log(questions);
-      ReactDOM.render(<QuestionList token={this.props.token} Questions={questions} />, document.getElementById("root"));
+      ReactDOM.render(<QuestionList token={this.props.token} Questions={questions} query={3} subject={name}/>, document.getElementById("root"));
     }}
 
   Batch = ({name, id, questions}) => (
