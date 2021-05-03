@@ -23,13 +23,13 @@ class ViewSubmissions extends React.Component {
         <div id="back">
         <button onClick={() => {ReactDOM.render(<ViewSubmissions token={this.props.token} submissions={this.props.submissions} />, document.getElementById("root"))}}>go back</button>
         </div>
-        <div>Language : <b>{submission.lang}</b></div>
+        <div>Language : <b>{submission.lang}</b></div><br></br>
         <b>Code:</b>
-        <div>{nl2br(submission.code)}</div>
+        <div>{nl2br(submission.code)}</div><br></br>
         <b>Input:</b>
-        <div>{nl2br(submission.result[0].input)}</div>
+        <div>{nl2br(submission.result[0].input)}</div><br></br>
         <b>Output:</b>
-        <div>{nl2br(submission.result[0].output)}</div>
+        <div>{nl2br(submission.result[0].output)}</div><br></br>
         <div>Result : <b>{result}</b></div>
       </div>,
       document.getElementById("root")
